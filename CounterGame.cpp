@@ -3,6 +3,9 @@
 #include <vector>
 #include <string>
 #include <bitset>
+#include <chrono>
+
+#define CHAR_BIT 8
 
 using namespace std;
 
@@ -14,13 +17,14 @@ string rtrim(const string &);
  * The function accepts LONG_INTEGER n as parameter.
  */
 
-string counterGame(long n) {
+string counterGameAlt(long n) {
     int currentPlayer = 0;
     bitset<sizeof(int) * CHAR_BIT> bits(n);
     int index = 0;
     int size = bits.size();
-    while(bits.to_ulong() != 1) {
+    while(1) {
         if(bits.count() == 1) {
+            if(bits[0] == 1) return currentPlayer ? "Louise" : "Richard";
             bits >>= 1;
             index += 1;
         } else {
@@ -34,26 +38,17 @@ string counterGame(long n) {
         }
         currentPlayer = !currentPlayer;
     }
-    return currentPlayer ? "Louise" : "Richard";
 }
 
-string counterGameAlt(long n) {
+string counterGame(long n) {
     bitset<sizeof(int) * CHAR_BIT> bits(n);
-    string bitString = bits.to_string();
     int zeroCounter = 0;
-    int bitSize = bitString.size();
-    int currentPlayer = 1;
     // Count zeros to the right
-    for(int i = 0; i < bitString.size(); i++) {
-        if(bitString[bitSize - 1 - i] == '0') zeroCounter += 1;
+    for(int i = 0; i < bits.size(); i++) {
+        if(bits[i] == 0) zeroCounter += 1;
         else break;
     }
-    // From the left: if 1, change player; if 0, continue
-    for(int i = 0; i < bitString.size(); i++) {
-        if(bitString[i] == '1') currentPlayer = !currentPlayer;
-    }
-    cout << currentPlayer << ":" << zeroCounter << endl;
-    return currentPlayer + zeroCounter % 2 != 1 ? "Luise" : "Richard";
+    return ((bits.count() - 1) + zeroCounter) % 2 == 0 ? "Richard" : "Luise";
 }
 
 int main()
