@@ -34,7 +34,7 @@ string counterGame(long n) {
         }
         currentPlayer = !currentPlayer;
     }
-    return currentPlayer ? "Richard" : "Luise";
+    return currentPlayer ? "Louise" : "Richard";
 }
 
 string counterGameAlt(long n) {
